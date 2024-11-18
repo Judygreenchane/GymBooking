@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GymBooking.Data;
 using GymBooking.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace GymBooking.Controllers
 {
@@ -14,9 +15,10 @@ namespace GymBooking.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public GymClassesController(ApplicationDbContext context)
+        public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: GymClasses
@@ -24,6 +26,36 @@ namespace GymBooking.Controllers
         {
             return View(await _context.GymClasses.ToListAsync());
         }
+        public async Task<IActionResult> BookingToogle(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var userId = _userManager.GetUserId(User);
+
+            var attending = await _context.ApplicationUserGymClass.FindAsync(userId, id);
+
+            if (attending == null)
+            {
+                var booking = new ApplicationUserGymClass
+                {
+                    ApplicationUserId = userId,
+                    GymClassId = (int)id
+                };
+                _context.ApplicationUserGymClass.Add(booking);
+            }
+            else
+            {
+                _context.Remove(attending);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
 
         // GET: GymClasses/Details/5
         public async Task<IActionResult> Details(int? id)
