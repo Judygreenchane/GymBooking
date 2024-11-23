@@ -10,9 +10,11 @@ using GymBooking.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Net.NetworkInformation;
 using GymBooking.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GymBooking.Controllers
 {
+    [Authorize]
     public class GymClassesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,6 +27,7 @@ namespace GymBooking.Controllers
         }
 
         // GET: GymClasses
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.GymClasses.ToListAsync());
@@ -52,6 +55,7 @@ namespace GymBooking.Controllers
         }
 
         // GET: GymClasses/Create
+        
         public IActionResult Create()
         {
             return View();
