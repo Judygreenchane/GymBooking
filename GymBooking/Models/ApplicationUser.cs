@@ -4,6 +4,6 @@ namespace GymBooking.Models
 {
     public class ApplicationUser :IdentityUser
     {
-        public ICollection<ApplicationUserGymClass> AttendingClasses { get; set; }
+        public ICollection<ApplicationUserGymClass> AttendedClasses { get; set; }
     }
 }
