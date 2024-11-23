@@ -61,7 +61,10 @@ namespace GymBooking.Data
             {
                 UserName = accountEmail,
                 Email = accountEmail,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                FirstName = fName,
+                LastName = lName,
+                TimeOfRegistration= DateTime.Now
             };
 
             var result = await userManager.CreateAsync(user, password);
